@@ -6,6 +6,8 @@ import java.util.*;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
@@ -57,6 +59,14 @@ public class TimeTrackerController {
 
         // Return a success message with some details from the JSON
         return String.format("Received JSON file with name: %s and age: %d", name, age);
+    }
+
+    @PostMapping("/upload")
+    public ResponseEntity<String> uploadJsonFile(@RequestBody Object myObject) {
+        // Process the JSON object
+        System.out.println(myObject);
+
+        return ResponseEntity.ok("JSON file received successfully");
     }
 
     // @GetMapping("/data")

@@ -9,6 +9,21 @@ public class Event {
     private String StartTime;
     private String EndTime;
 
+    public Event() {
+
+    }
+
+    public Event(int id, int color, String activity, String description, boolean isSleep, String startTime,
+            String endTime) {
+        this.id = id;
+        Color = color;
+        Activity = activity;
+        Description = description;
+        IsSleep = isSleep;
+        StartTime = startTime;
+        EndTime = endTime;
+    }
+
     public int getId() {
         return id;
     }
