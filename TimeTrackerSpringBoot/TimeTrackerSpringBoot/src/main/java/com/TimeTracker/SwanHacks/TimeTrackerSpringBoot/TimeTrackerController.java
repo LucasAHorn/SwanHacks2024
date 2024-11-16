@@ -67,16 +67,40 @@ public class TimeTrackerController {
         return String.format("Received JSON file with name: %s and age: %d", name, age);
     }
 
-    
-
+    // This can be used for testing, will return to react
     @GetMapping("/data")
-    public ResponseEntity<Object> helloWorld() {
+    public ResponseEntity<Object> tester() {
         Map<String, Object> data = new HashMap<>();
+
+        data.put("Activtiy", "lalala");
+
         data.put("message", "Hello from Spring Boot!");
         return ResponseEntity.ok(data);
     }
 
-    // This can be used for testing, will return to react
+    @GetMapping("/data/getAll")
+    public ArrayList<ResponseEntity<Object>> getAll() {
+        Map<String, Object> data = new HashMap<>();
+
+        ArrayList<ResponseEntity<Object>> all = new ArrayList<ResponseEntity<Object>>();
+
+        for (Event e : timeChart) {
+            data.put("id", e.getId());
+            data.put("color", e.getColor());
+            data.put("isSleep", e.getIsSleep());
+            data.put("Activity", e.getActivity());
+            data.put("StartTime", e.getStartTime());
+            data.put("EndTime", e.getEndTime());
+
+            all.add(ResponseEntity.ok(data));
+        }
+
+        data.put("Activtiy", "lalala");
+
+        data.put("message", "Hello from Spring Boot!");
+        return all;
+    }
+
     @GetMapping("/data/test")
     public String displayString(@RequestParam String inputString) {
         return "You entered: " + inputString;

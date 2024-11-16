@@ -5,7 +5,7 @@ public class Event {
     private int Color;
     private String Activity;
     private String Description;
-    private boolean IsSleep;
+    private int IsSleep;
     private String StartTime;
     private String EndTime;
 
@@ -13,12 +13,11 @@ public class Event {
 
     }
 
-    public Event(int id, int color, String activity, String description, boolean isSleep, String startTime,
+    public Event(int id, int color, String activity, int isSleep, String startTime,
             String endTime) {
         this.id = id;
         Color = color;
         Activity = activity;
-        Description = description;
         IsSleep = isSleep;
         StartTime = startTime;
         EndTime = endTime;
@@ -48,19 +47,11 @@ public class Event {
         Activity = activity;
     }
 
-    public String getDescription() {
-        return Description;
-    }
-
-    public void setDescription(String description) {
-        Description = description;
-    }
-
-    public boolean isIsSleep() {
+    public int getIsSleep() {
         return IsSleep;
     }
 
-    public void setIsSleep(boolean isSleep) {
+    public void setIsSleep(int isSleep) {
         IsSleep = isSleep;
     }
 
