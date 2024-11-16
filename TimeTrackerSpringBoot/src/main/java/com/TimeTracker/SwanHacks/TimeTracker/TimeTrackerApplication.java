@@ -8,6 +8,7 @@ public class TimeTrackerApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(TimeTrackerApplication.class, args);
+
 	}
 
 }
