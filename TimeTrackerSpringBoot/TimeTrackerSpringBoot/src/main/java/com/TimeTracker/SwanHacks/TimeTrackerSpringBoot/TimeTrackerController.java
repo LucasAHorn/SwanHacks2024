@@ -12,6 +12,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.json.simple.JSONObject;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+@Configuration
 @RestController
 @RequestMapping("/api")
 public class TimeTrackerController {
@@ -28,9 +31,12 @@ public class TimeTrackerController {
 
     private ArrayList<Event> timeChart = new ArrayList<Event>();
 
-    @GetMapping("/api/test")
-    public String hello() {
-        return "This Works!";
+    @GetMapping("/test")
+    public ResponseEntity<Object> hello() {
+        Map<String, Object> data = new HashMap<>();
+        data.put("message", "Hello from Spring Boot!");
+        data.put("timeStamp", new Date());
+        return ResponseEntity.ok(data);
     }
 
     public String uploadJsonFile(@RequestParam("file") MultipartFile file) {
@@ -59,19 +65,16 @@ public class TimeTrackerController {
         return String.format("Received JSON file with name: %s and age: %d", name, age);
     }
 
-    // @GetMapping("/data")
-    // public Collection<TimeTracker> get() {
-    // return db.values();
-    // }
+    
 
     @GetMapping("/data")
     public ResponseEntity<Object> helloWorld() {
         Map<String, Object> data = new HashMap<>();
         data.put("message", "Hello from Spring Boot!");
-        data.put("timeStamp", new Date());
         return ResponseEntity.ok(data);
     }
 
+    // This can be used for testing, will return to react
     @GetMapping("/data/test")
     public String displayString(@RequestParam String inputString) {
         return "You entered: " + inputString;

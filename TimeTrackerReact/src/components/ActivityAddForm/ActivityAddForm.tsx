@@ -3,7 +3,8 @@ import styles from "./ActivityAddForm.module.css";
 
 const ActivityForm: React.FC = () => {
     const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState(""); // Added end date
     const [startTime, setStartTime] = useState("");
     const [endTime, setEndTime] = useState("");
     const [selectedColor, setSelectedColor] = useState("");
@@ -23,14 +24,14 @@ const ActivityForm: React.FC = () => {
         );
     };
 
-    // TODO: add the dingle 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        const activity = { title, description, startTime, endTime, selectedColor, selectedDays };
+        const activity = { title, startDate, endDate, startTime, endTime, selectedColor, selectedDays };
         console.log("Activity:", activity);
         // Reset form
         setTitle("");
-        setDescription("");
+        setStartDate("");
+        setEndDate("");
         setStartTime("");
         setEndTime("");
         setSelectedColor("");
@@ -40,7 +41,8 @@ const ActivityForm: React.FC = () => {
     const handleCancel = () => {
         // Reset form
         setTitle("");
-        setDescription("");
+        setStartDate("");
+        setEndDate("");
         setStartTime("");
         setEndTime("");
         setSelectedColor("");
@@ -62,13 +64,26 @@ const ActivityForm: React.FC = () => {
             </div>
 
             <div>
-                <label className={styles.label} htmlFor="description">Description</label>
-                <textarea
-                    id="description"
+                <label className={styles.label} htmlFor="startDate">Start Date</label>
+                <input
+                    type="date"
+                    id="startDate"
                     className={styles.input}
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    rows={3}
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    required
+                />
+            </div>
+
+            <div>
+                <label className={styles.label} htmlFor="endDate">End Date</label>
+                <input
+                    type="date"
+                    id="endDate"
+                    className={styles.input}
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    required
                 />
             </div>
 

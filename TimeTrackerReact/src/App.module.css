@@ -1,4 +1,79 @@
-header {
+/* Ensure the page takes the full height */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%; /* Make sure the body fills the viewport */
+  overflow: hidden; /* Prevent scrollbars */
+}
+
+/* Main container takes full height */
+.mainContent {
   display: flex;
-  align-items: center;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem;
+  min-height: 100vh; /* Ensures it spans the entire viewport height */
+  box-sizing: border-box; /* Includes padding in height calculations */
+}
+
+/* Centered title section */
+.title {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+/* Left and right sections */
+.side {
+  flex: 1;
+  /* padding: 1rem; */
+  padding-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-sizing: border-box;
+}
+
+/* Header at the top of the left section */
+.header {
+  display: flex;
+  margin-bottom: 1rem;
+}
+
+.tabs {
+  display: flex;
+  justify-content: right;
+}
+
+.tabs button {
+  padding: 0.5rem 1rem;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 7.0px;
+  cursor: pointer;
+  margin-left: 0.1vw;
+  margin-bottom: 1rem;
+}
+
+.tabs .active {
+  background-color: #333; /* Darkened background */
+  color: #fff; /* Light text */
+}
+
+.tabs .inactive {
+  background-color: #f0f0f0; /* Lightened background */
+  color: #333; /* Dark text */
+}
+
+.tabs button:hover {
+  opacity: 0.8; /* Subtle hover effect */
+}
+
+/* Prevent additional scroll caused by content */
+.placeholder {
+  overflow: hidden;
+  text-align: center;
+  color: gray;
+  font-style: italic;
 }
