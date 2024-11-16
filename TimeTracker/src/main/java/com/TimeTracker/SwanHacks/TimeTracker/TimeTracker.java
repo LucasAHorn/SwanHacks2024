@@ -1,6 +1,6 @@
-package com.TimeTracker.SwanHacks.photoz.clone;
+package com.TimeTracker.SwanHacks.TimeTracker;
 
-public class Photo {
+public class TimeTracker {
 
     private String id;
 
@@ -18,11 +18,11 @@ public class Photo {
         return fileName;
     }
 
-    public Photo() {
+    public TimeTracker() {
 
     }
 
-    public Photo(String id, String fileName) {
+    public TimeTracker(String id, String fileName) {
         this.id = id;
         this.fileName = fileName;
     }

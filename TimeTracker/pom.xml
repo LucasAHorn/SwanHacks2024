@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.TimeTracker.SwanHacks</groupId>
-	<artifactId>photoz-clone</artifactId>
+	<artifactId>TimeTracker</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>photoz-clone</name>
-	<description>Time Tracker application</description>
+	<name>TimeTracker</name>
+	<description>Time Tracker for Swan Hacks</description>
 	<url/>
 	<licenses>
 		<license/>

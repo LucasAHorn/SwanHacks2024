@@ -1,10 +1,10 @@
-package com.TimeTracker.SwanHacks.photoz.clone;
+package com.TimeTracker.SwanHacks.TimeTracker;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class PhotozCloneApplicationTests {
+class TimeTrackerApplicationTests {
 
 	@Test
 	void contextLoads() {
