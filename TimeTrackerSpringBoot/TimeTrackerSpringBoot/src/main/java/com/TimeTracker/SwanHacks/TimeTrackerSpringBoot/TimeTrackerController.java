@@ -89,6 +89,7 @@ public class TimeTrackerController {
             data.put("color", e.getColor());
             data.put("isSleep", e.getIsSleep());
             data.put("Activity", e.getActivity());
+            data.put("date", e.getDate());
             data.put("StartTime", e.getStartTime());
             data.put("EndTime", e.getEndTime());
 
@@ -99,6 +100,28 @@ public class TimeTrackerController {
 
         data.put("message", "Hello from Spring Boot!");
         return all;
+    }
+
+    public void Sort() {
+        ArrayList<Event> sortedList = new ArrayList<Event>();
+
+        for (int i = 1; i < timeChart.size(); ++i) {
+            Event key = timeChart.get(i);
+            int j = i - 1;
+
+            /*
+             * Move elements of arr[0..i-1], that are
+             * greater than key, to one position ahead
+             * of their current position
+             */
+            // Check to see if this sort works
+            while (j >= 0 && timeChart.get(j).getDate().compareTo(key.getDate()) < 0) {
+                timeChart.set(j + 1, timeChart.get(j));
+                j = j - 1;
+            }
+            timeChart.set(j + 1, key);
+        }
+
     }
 
     @GetMapping("/data/test")

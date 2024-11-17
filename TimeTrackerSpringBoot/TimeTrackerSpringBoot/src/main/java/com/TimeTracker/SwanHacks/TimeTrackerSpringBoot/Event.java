@@ -4,7 +4,7 @@ public class Event {
     private int id;
     private int Color;
     private String Activity;
-    private String Description;
+    private String Date;
     private int IsSleep;
     private String StartTime;
     private String EndTime;
@@ -69,6 +69,14 @@ public class Event {
 
     public void setEndTime(String endTime) {
         EndTime = endTime;
+    }
+
+    public String getDate() {
+        return Date;
+    }
+
+    public void setDate(String date) {
+        Date = date;
     }
 
 }
