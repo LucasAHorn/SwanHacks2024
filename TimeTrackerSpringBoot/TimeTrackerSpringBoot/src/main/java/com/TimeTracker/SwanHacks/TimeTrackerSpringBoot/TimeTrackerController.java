@@ -29,51 +29,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RequestMapping("/api")
 public class TimeTrackerController {
 
+    // call function that makes the arraylist
+
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private ArrayList<Event> timeChart = new ArrayList<Event>();
-
-    @GetMapping("/test")
-    public ResponseEntity<Object> hello() {
-        Map<String, Object> data = new HashMap<>();
-        data.put("message", "Hello from Spring Boot!");
-        data.put("timeStamp", new Date());
-        return ResponseEntity.ok(data);
-    }
-
-    @GetMapping("/test/upload")
-    public void add(@RequestParam("file") MultipartFile file) {
-        // Read the file content as JSON
-        Event givenTime = new Event();
-        JsonNode jsonNode = null;
-
-        try {
-            jsonNode = objectMapper.readTree(file.getInputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // Example of how to access the JSON data
-        @SuppressWarnings("null")
-        int Id = jsonNode.path("Id").asInt();
-        String Activity = jsonNode.path("Activity").asText();
-        int color = jsonNode.path("age").asInt();
-        String date = jsonNode.path("date").asText();
-        String StartTime = jsonNode.path("StartTime").asText();
-        String EndTime = jsonNode.path("EndTime").asText();
-
-        givenTime.setId(Id);
-        givenTime.setActivity(Activity);
-        givenTime.setColor(color);
-        givenTime.setDate(date);
-        givenTime.setStartTime(StartTime);
-        givenTime.setEndTime(EndTime);
-
-        timeChart.add(givenTime);
-
-        // ToDo: add to text file as well
-
-    }
+    private ArrayList<Event> eventsList = new ArrayList<Event>();
 
     // This can be used for testing, will return to react
     @GetMapping("/data")
@@ -86,34 +46,37 @@ public class TimeTrackerController {
         return ResponseEntity.ok(data);
     }
 
-    @GetMapping("/data/getAll")
-    public ArrayList<ResponseEntity<Object>> getAll() {
-        Map<String, Object> data = new HashMap<>();
+    @GetMapping("/EventsRange")
+    public ResponseEntity<HashMap<String, List<HashMap<String, String>>>> getActivities(
+            @RequestParam("start") String startDate,
+            @RequestParam("end") String endDate) {
 
-        ArrayList<ResponseEntity<Object>> all = new ArrayList<ResponseEntity<Object>>();
-
-        for (Event e : timeChart) {
-            data.put("id", e.getId());
-            data.put("color", e.getColor());
-            data.put("Activity", e.getActivity());
-            data.put("date", e.getDate());
-            data.put("StartTime", e.getStartTime());
-            data.put("EndTime", e.getEndTime());
-
-            all.add(ResponseEntity.ok(data));
+        HashMap<String, List<HashMap<String, String>>> returnedHashMap = new HashMap<>();
+        ArrayList<HashMap<String, String>> arr = new ArrayList();
+        HashMap<String, String> EventDescription;
+        for (Event e : eventsList) {
+            if (e.isInRange(startDate, endDate)) {  // TODO: implement the function
+                EventDescription = new HashMap<>();
+                EventDescription.put("ID", "" + e.getId());
+                EventDescription.put("Color", e.getColor());
+                EventDescription.put("Activity", e.getActivity());
+                EventDescription.put("EndTime", e.getEndTime());
+                EventDescription.put("StartTime", e.getEndTime());
+                arr.add(EventDescription);
+            }
         }
+        returnedHashMap.put("Events", arr);
 
-        data.put("Activtiy", "lalala");
-
-        data.put("message", "Hello from Spring Boot!");
-        return all;
+        // Fetch activities for the given date range
+        return ResponseEntity.ok(returnedHashMap);
     }
+
 
     public void Sort() {
         ArrayList<Event> sortedList = new ArrayList<Event>();
 
-        for (int i = 1; i < timeChart.size(); ++i) {
-            Event key = timeChart.get(i);
+        for (int i = 1; i < eventsList.size(); ++i) {
+            Event val = eventsList.get(i);
             int j = i - 1;
 
             /*
@@ -122,11 +85,11 @@ public class TimeTrackerController {
              * of their current position
              */
             // Check to see if this sort works
-            while (j >= 0 && timeChart.get(j).getDate().compareTo(key.getDate()) < 0) {
-                timeChart.set(j + 1, timeChart.get(j));
+            while (j >= 0 && eventsList.get(j).getDate().compareTo(val.getDate()) < 0) {
+                eventsList.set(j + 1, eventsList.get(j));
                 j = j - 1;
             }
-            timeChart.set(j + 1, key);
+            eventsList.set(j + 1, val);
         }
 
     }

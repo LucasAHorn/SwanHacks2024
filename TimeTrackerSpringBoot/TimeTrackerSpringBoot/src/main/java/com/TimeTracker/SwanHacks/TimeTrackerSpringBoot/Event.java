@@ -2,7 +2,7 @@ package com.TimeTracker.SwanHacks.TimeTrackerSpringBoot;
 
 public class Event {
     private int id;
-    private int Color;
+    private String Color;
     private String Activity;
     private String Date;
     private String StartTime;
@@ -12,7 +12,7 @@ public class Event {
 
     }
 
-    public Event(int id, int color, String activity, String startTime,
+    public Event(int id, String color, String activity, String startTime,
             String endTime) {
         this.id = id;
         Color = color;
@@ -21,52 +21,38 @@ public class Event {
         EndTime = endTime;
     }
 
+    /**
+     * returns if this is within the specified range (inclusive, exclusive), you can change inputs as needed
+     * @param start
+     * @param end
+     * @return
+     */
+    public Boolean isInRange(String start, String end) {
+        // TODO: implement:
+        return false;
+    }
+
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getColor() {
+    public String getColor() {
         return Color;
-    }
-
-    public void setColor(int color) {
-        Color = color;
     }
 
     public String getActivity() {
         return Activity;
     }
 
-    public void setActivity(String activity) {
-        Activity = activity;
-    }
-
     public String getStartTime() {
         return StartTime;
-    }
-
-    public void setStartTime(String startTime) {
-        StartTime = startTime;
     }
 
     public String getEndTime() {
         return EndTime;
     }
 
-    public void setEndTime(String endTime) {
-        EndTime = endTime;
-    }
-
     public String getDate() {
         return Date;
     }
-
-    public void setDate(String date) {
-        Date = date;
-    }
-
 }
