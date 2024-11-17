@@ -1,5 +1,7 @@
 package com.TimeTracker.SwanHacks.TimeTrackerSpringBoot;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
@@ -35,9 +37,6 @@ public class TimeTrackerController {
 
     private ArrayList<Event> eventsList = new ArrayList<Event>();
 
-
-
-
     // This can be used for testing, will return to react
     @GetMapping("/data")
     public ResponseEntity<Object> tester() {
@@ -58,7 +57,7 @@ public class TimeTrackerController {
         ArrayList<HashMap<String, String>> arr = new ArrayList();
         HashMap<String, String> EventDescription;
         for (Event e : eventsList) {
-            if (e.isInRange(startDate, endDate)) {  // TODO: implement the function
+            if (e.isInRange(startDate, endDate)) { // TODO: implement the function
                 EventDescription = new HashMap<>();
                 EventDescription.put("ID", "" + e.getId());
                 EventDescription.put("Color", e.getColor());
@@ -73,7 +72,6 @@ public class TimeTrackerController {
         // Fetch activities for the given date range
         return ResponseEntity.ok(returnedHashMap);
     }
-
 
     public void Sort() {
         ArrayList<Event> sortedList = new ArrayList<Event>();
@@ -102,6 +100,15 @@ public class TimeTrackerController {
         return "You entered: " + inputString;
     }
 
+    @GetMapping("/add")
+    // Todo making this
+    public void addEvent(@RequestBody int ID, @RequestBody String Activity, @RequestBody int Color,
+            @RequestBody String Start, @RequestBody String End, @RequestBody String Date) {
+        Event CurrentEvent = new Event();
+
+        // TODO: make a new file (def just to keep history)
+    }
+
     // This is an example of how to get data
     @GetMapping("/remove")
     public void removeEvent(@RequestBody HashMap<String, Integer> IdMap) {
@@ -110,7 +117,40 @@ public class TimeTrackerController {
                 eventsList.remove(e);
             }
         }
+
+        write();
         // TODO: make a new file (def just to keep history)
+    }
+
+    @SuppressWarnings("unchecked")
+    public void write() {
+        // Creating a JSONObject object
+        JSONObject jsonObject = new JSONObject();
+
+        File checkfile = new File("./userData.json");
+        if (checkfile.exists()) {
+            checkfile.delete();
+        }
+
+        // Inserting key-value pairs into the json object
+        for (int i = 0; i < eventsList.size(); i++) {
+
+            jsonObject.put("ID", eventsList.get(i).getId());
+            jsonObject.put("Activity", eventsList.get(i).getActivity());
+            jsonObject.put("Color", eventsList.get(i).getColor());
+            jsonObject.put("Start", eventsList.get(i).getStartTime());
+            jsonObject.put("End", eventsList.get(i).getEndTime());
+            jsonObject.put("Date", eventsList.get(i).getDate());
+
+            try {
+                FileWriter file = new FileWriter("./userData.json");
+                file.write(jsonObject.toJSONString() + "\n");
+                file.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.println("JSON file created: " + jsonObject);
+        }
     }
 
 }
