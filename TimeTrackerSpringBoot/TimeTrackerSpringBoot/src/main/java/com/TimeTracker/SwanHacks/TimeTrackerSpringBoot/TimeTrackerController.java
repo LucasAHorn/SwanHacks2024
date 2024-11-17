@@ -35,7 +35,7 @@ public class TimeTrackerController {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private ArrayList<Event> eventsList = new ArrayList<Event>();
+    private ArrayList<Event> eventsList = JsonReader();
 
     // This can be used for testing, will return to react
     @GetMapping("/data")
@@ -106,6 +106,25 @@ public class TimeTrackerController {
             @RequestBody String Start, @RequestBody String End, @RequestBody String Date) {
         Event CurrentEvent = new Event(ID, Color, Activity, Start, End, Date);
 
+        boolean shouldAdd = true;
+
+        // Todo check that the comparisons are right
+        for (Event e : eventsList) {
+            if (Start.compareTo(e.getStartTime()) <= 0 && Start.compareTo(e.getEndTime()) >= 0) {
+                shouldAdd = false;
+                break;
+            }
+
+            if (End.compareTo(e.getStartTime()) >= 0 && Start.compareTo(e.getEndTime()) <= 0) {
+                shouldAdd = false;
+                break;
+            }
+        }
+
+        if (shouldAdd) {
+            eventsList.add(CurrentEvent);
+        }
+
         sort();
         write();
     }
@@ -152,6 +171,17 @@ public class TimeTrackerController {
             }
             System.out.println("JSON file created: " + jsonObject);
         }
+    }
+
+    public ArrayList<Event> JsonReader() {
+        ArrayList<Event> temp = new ArrayList<Event>();
+        File file = new File("serData.json");
+
+        if (!file.exists()) {
+            return temp;
+        }
+
+        return null;
     }
 
 }
