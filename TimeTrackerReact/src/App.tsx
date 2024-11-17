@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import ActivityAddForm from "./components/ActivityAddForm";
 import styles from "./App.module.css";
+import ActivityAddForm from "./components/ActivityAddForm";
 import DataAnalysisWeek from "./components/DataAnalysisWeek";
+import DataViewWeek from "./components/DataViewWeek";
 
 const App: React.FC = () => {
   // State to track active tab
@@ -33,16 +34,18 @@ const App: React.FC = () => {
               className={activeTab === "analysis" ? styles.active : styles.inactive}
               onClick={() => handleTabClick("analysis")}
             >
+
+
               Activity Analysis
             </button>
           </div>
 
           {/* Content toggled based on active tab */}
           {activeTab === "addActivity" && <ActivityAddForm />}
-          {activeTab === "analysis" && <p>Analysis Content Placeholder</p>}
+          {activeTab === "analysis" && <DataAnalysisWeek />}
         </div>
         <div className={styles.side}>
-          <DataAnalysisWeek />
+          <DataViewWeek />
         </div>
       </div>
     </>

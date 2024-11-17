@@ -1,1 +1,1 @@
-// export { default } from "./DataViewWeek";
+export { default } from "./DataViewWeek";

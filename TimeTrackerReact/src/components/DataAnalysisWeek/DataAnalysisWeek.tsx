@@ -7,6 +7,8 @@ const DataAnalysisWeek: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+
+
   useEffect(() => {
     // Fetch data from Spring Boot backend
     const fetchData = async () => {
@@ -16,7 +18,7 @@ const DataAnalysisWeek: React.FC = () => {
           throw new Error("Network response was not ok");
         }
         const result = await response.json(); // Assuming the response is JSON
-        setData(result.message); // Replace `message` with the actual field you want to display
+        setData(result.now); // Replace `message` with the actual field you want to display
         setLoading(false);
       } catch (error: any) {
         setError(error.message);
