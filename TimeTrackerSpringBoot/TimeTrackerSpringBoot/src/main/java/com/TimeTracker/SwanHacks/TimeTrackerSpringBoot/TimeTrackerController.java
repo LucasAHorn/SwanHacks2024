@@ -60,7 +60,7 @@ public class TimeTrackerController {
             if (e.isInRange(startDate, endDate)) { // TODO: implement the function
                 EventDescription = new HashMap<>();
                 EventDescription.put("ID", "" + e.getId());
-                EventDescription.put("Color", e.getColor());
+                EventDescription.put("Color", "" + e.getColor());
                 EventDescription.put("Activity", e.getActivity());
                 EventDescription.put("EndTime", e.getEndTime());
                 EventDescription.put("StartTime", e.getEndTime());
@@ -73,7 +73,7 @@ public class TimeTrackerController {
         return ResponseEntity.ok(returnedHashMap);
     }
 
-    public void Sort() {
+    public void sort() {
         ArrayList<Event> sortedList = new ArrayList<Event>();
 
         for (int i = 1; i < eventsList.size(); ++i) {
@@ -104,9 +104,10 @@ public class TimeTrackerController {
     // Todo making this
     public void addEvent(@RequestBody int ID, @RequestBody String Activity, @RequestBody int Color,
             @RequestBody String Start, @RequestBody String End, @RequestBody String Date) {
-        Event CurrentEvent = new Event();
+        Event CurrentEvent = new Event(ID, Color, Activity, Start, End, Date);
 
-        // TODO: make a new file (def just to keep history)
+        sort();
+        write();
     }
 
     // This is an example of how to get data

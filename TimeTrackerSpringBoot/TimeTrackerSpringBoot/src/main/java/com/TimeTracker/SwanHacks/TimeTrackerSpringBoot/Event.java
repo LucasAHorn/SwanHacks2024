@@ -2,7 +2,7 @@ package com.TimeTracker.SwanHacks.TimeTrackerSpringBoot;
 
 public class Event {
     private int id;
-    private String Color;
+    private int Color;
     private String Activity;
     private String Date;
     private String StartTime;
@@ -12,13 +12,14 @@ public class Event {
 
     }
 
-    public Event(int id, String color, String activity, String startTime,
-            String endTime) {
+    public Event(int id, int color, String activity, String startTime,
+            String endTime, String Date) {
         this.id = id;
         Color = color;
         Activity = activity;
         StartTime = startTime;
         EndTime = endTime;
+        this.Date = Date;
     }
 
     /**
@@ -43,7 +44,7 @@ public class Event {
         return id;
     }
 
-    public String getColor() {
+    public int getColor() {
         return Color;
     }
 
