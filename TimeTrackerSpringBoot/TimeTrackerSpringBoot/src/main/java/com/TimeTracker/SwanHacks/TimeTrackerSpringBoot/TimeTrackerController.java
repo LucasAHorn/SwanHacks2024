@@ -95,12 +95,33 @@ public class TimeTrackerController {
 
     }
 
+    public void sortByActivity() {
+        // Todo make this
+        for (int i = 1; i < eventsList.size(); ++i) {
+            Event val = eventsList.get(i);
+            int j = i - 1;
+
+            /*
+             * Move elements of arr[0..i-1], that are
+             * greater than key, to one position ahead
+             * of their current position
+             */
+            // Check to see if this sort works
+            while (j >= 0 && eventsList.get(j).getDate().compareTo(val.getDate()) < 0) {
+                eventsList.set(j + 1, eventsList.get(j));
+                j = j - 1;
+            }
+            eventsList.set(j + 1, val);
+        }
+
+    }
+
     @GetMapping("/data/test")
     public String displayString(@RequestParam String inputString) {
         return "You entered: " + inputString;
     }
 
-    @GetMapping("/add")
+    @GetMapping("/addEvent")
     // Todo making this
     public void addEvent(@RequestBody int ID, @RequestBody String Activity, @RequestBody String Color,
             @RequestBody String Start, @RequestBody String End, @RequestBody String Date) {
@@ -130,7 +151,7 @@ public class TimeTrackerController {
     }
 
     // This is an example of how to get data
-    @GetMapping("/remove")
+    @GetMapping("/removeEvent")
     public void removeEvent(@RequestBody HashMap<String, Integer> IdMap) {
         for (Event e : eventsList) {
             if (e.getId() == IdMap.get("Id_Number")) {
@@ -163,6 +184,17 @@ public class TimeTrackerController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public ArrayList<HashMap<String, Integer>> activities(String startDate, String endDate) {
+        ArrayList<HashMap<String, Integer>> activities = new ArrayList<>();
+        HashMap<String, Integer> highActivity = new HashMap<>();
+        HashMap<String, Integer> lowActivity = new HashMap<>();
+
+        sortByActivity();
+
+        sort();
+        return activities;
     }
 
     public ArrayList<Event> read() {

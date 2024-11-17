@@ -1,5 +1,8 @@
 package com.TimeTracker.SwanHacks.TimeTrackerSpringBoot;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+
 public class Event {
     private int id;
     private String Color;
@@ -7,6 +10,7 @@ public class Event {
     private String Date;
     private String StartTime;
     private String EndTime;
+    private double TaskTime;
 
     public Event() {
 
@@ -20,6 +24,7 @@ public class Event {
         StartTime = startTime;
         EndTime = endTime;
         this.Date = Date;
+        TaskTime = getTaskTime(startTime, endTime);
     }
 
     /**
@@ -38,6 +43,20 @@ public class Event {
         } else {
             return true;
         }
+    }
+
+    public double getTaskTime(String start, String end) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        LocalTime time1Parsed = LocalTime.parse(start, formatter);
+        LocalTime time2Parsed = LocalTime.parse(end, formatter);
+
+        // Calculate the difference in minutes
+        long minutesDiff = java.time.Duration.between(time1Parsed, time2Parsed).toMinutes();
+
+        // Convert the difference to hours (as a double)
+        double hoursDiff = minutesDiff / 60.0;
+        return hoursDiff;
     }
 
     public int getId() {

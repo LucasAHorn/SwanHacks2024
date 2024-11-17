@@ -12,6 +12,8 @@ import com.google.gson.reflect.TypeToken;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -40,15 +42,34 @@ public class test {
         }
 
         ObjectMapper mapper = new ObjectMapper();
-        File jsonFile = new File("src/main/resources/data.json"); // Path to your JSON file
 
         try {
             JsonNode jsonData = mapper.readTree(new File("userData.json"));
             System.out.println(jsonData);
             System.out.println(jsonData.getNodeType());
+
+            for (int i = 0; i < jsonData.size(); i++) {
+
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        String time1 = "11:30";
+        String time2 = "12:00";
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        LocalTime time1Parsed = LocalTime.parse(time1, formatter);
+        LocalTime time2Parsed = LocalTime.parse(time2, formatter);
+
+        // Calculate the difference in minutes
+        long minutesDiff = java.time.Duration.between(time1Parsed, time2Parsed).toMinutes();
+
+        // Convert the difference to hours (as a double)
+        double hoursDiff = minutesDiff / 60.0;
+
+        // Print the result
+        System.out.println("Difference in hours: " + hoursDiff);
 
     }
 }
