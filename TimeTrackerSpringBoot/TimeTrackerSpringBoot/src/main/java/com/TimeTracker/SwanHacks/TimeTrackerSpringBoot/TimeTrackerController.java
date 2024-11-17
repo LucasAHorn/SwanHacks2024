@@ -35,6 +35,9 @@ public class TimeTrackerController {
 
     private ArrayList<Event> eventsList = new ArrayList<Event>();
 
+
+
+
     // This can be used for testing, will return to react
     @GetMapping("/data")
     public ResponseEntity<Object> tester() {
@@ -99,19 +102,15 @@ public class TimeTrackerController {
         return "You entered: " + inputString;
     }
 
-    // @GetMapping("/data/{id}")
-    // public TimeTracker get(@PathVariable String id) {
-    // TimeTracker photo = db.get(id);
-    // if (photo == null)
-    // throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-    // return photo;
-    // }
-
-    // @DeleteMapping("/data/{id}")
-    // public void remove(@PathVariable String id) {
-    // TimeTracker photo = db.remove(id);
-    // if (photo == null)
-    // throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-    // }
+    // This is an example of how to get data
+    @GetMapping("/remove")
+    public void removeEvent(@RequestBody HashMap<String, Integer> IdMap) {
+        for (Event e : eventsList) {
+            if (e.getId() == IdMap.get("Id_Number")) {
+                eventsList.remove(e);
+            }
+        }
+        // TODO: make a new file (def just to keep history)
+    }
 
 }
