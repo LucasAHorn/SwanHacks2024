@@ -42,7 +42,7 @@ public class TimeTrackerController {
     }
 
     @GetMapping("/test/upload")
-    public void uploadJsonFile(@RequestParam("file") MultipartFile file) {
+    public void add(@RequestParam("file") MultipartFile file) {
         // Read the file content as JSON
         Event givenTime = new Event();
         JsonNode jsonNode = null;
