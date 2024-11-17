@@ -1,0 +1,38 @@
+.weekContainer {
+    display: flex;
+    justify-content: space-around; /* Space between the days */
+    align-items: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #ccc; /* Bottom border for styling */
+}
+
+.daysOfTheWeek {
+    flex: 1;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    border-right: 1px solid #ccc; /* Add a separator line */
+}
+
+.daysOfTheWeek:last-child {
+    border-right: none;
+}
+
+
+.weekEventContainer {
+    display: flex;          /* Enable Flexbox */
+    width: 100%;            /* Ensure the container spans the full width of its parent */
+}
+
+.weekEventContainer > * {
+    flex: 1;                /* Make each child element occupy an equal portion of the width */
+    border-right: 1px solid #ccc; /* Optional: Add borders for better visualization */
+    text-align: center;     /* Optional: Center text inside each column */
+}
+
+.weekEventContainer:last-child {
+    border-right: none;
+}

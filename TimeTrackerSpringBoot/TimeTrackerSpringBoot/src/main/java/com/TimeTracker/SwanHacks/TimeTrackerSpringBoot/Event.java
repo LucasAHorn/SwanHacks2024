@@ -6,14 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
  public class Event {
 
-
-
-
-
-
-    
-
-
     @JsonProperty("ID_Number")
     private int id;
 
