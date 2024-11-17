@@ -268,7 +268,6 @@ public class TimeTrackerController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return tempList;
     }
 
