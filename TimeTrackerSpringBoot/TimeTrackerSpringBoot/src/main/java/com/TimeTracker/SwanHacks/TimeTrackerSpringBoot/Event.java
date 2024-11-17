@@ -28,11 +28,12 @@ public class Event {
     }
 
     /**
-     * returns if this is within the specified range (inclusive, exclusive), you can
-     * 
-     * 
+     * returns if this is within the specified range (inclusive, exclusive), you
+     * can
+     *
+     *
      * change inputs as needed
-     * 
+     *
      * @param start
      * @param end
      * @return
@@ -52,7 +53,8 @@ public class Event {
         LocalTime time2Parsed = LocalTime.parse(end, formatter);
 
         // Calculate the difference in minutes
-        long minutesDiff = java.time.Duration.between(time1Parsed, time2Parsed).toMinutes();
+        long minutesDiff = java.time.Duration.between(time1Parsed,
+                time2Parsed).toMinutes();
 
         // Convert the difference to hours (as a double)
         double hoursDiff = minutesDiff / 60.0;
