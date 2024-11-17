@@ -24,7 +24,7 @@ public class Event {
         StartTime = startTime;
         EndTime = endTime;
         this.Date = Date;
-        TaskTime = getTaskTime(startTime, endTime);
+        TaskTime = createTaskTime(startTime, endTime);
     }
 
     /**
@@ -46,7 +46,7 @@ public class Event {
         }
     }
 
-    public double getTaskTime(String start, String end) {
+    public double createTaskTime(String start, String end) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         LocalTime time1Parsed = LocalTime.parse(start, formatter);
@@ -59,6 +59,10 @@ public class Event {
         // Convert the difference to hours (as a double)
         double hoursDiff = minutesDiff / 60.0;
         return hoursDiff;
+    }
+
+    public double getTaskTime() {
+        return TaskTime;
     }
 
     public int getId() {

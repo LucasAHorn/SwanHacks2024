@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -96,18 +97,12 @@ public class TimeTrackerController {
     }
 
     public void sortByActivity() {
-        // Todo make this
+
         for (int i = 1; i < eventsList.size(); ++i) {
             Event val = eventsList.get(i);
             int j = i - 1;
 
-            /*
-             * Move elements of arr[0..i-1], that are
-             * greater than key, to one position ahead
-             * of their current position
-             */
-            // Check to see if this sort works
-            while (j >= 0 && eventsList.get(j).getDate().compareTo(val.getDate()) < 0) {
+            while (j >= 0 && eventsList.get(j).getTaskTime() > val.getTaskTime()) {
                 eventsList.set(j + 1, eventsList.get(j));
                 j = j - 1;
             }
@@ -186,15 +181,61 @@ public class TimeTrackerController {
         }
     }
 
-    public ArrayList<HashMap<String, Integer>> activities(String startDate, String endDate) {
-        ArrayList<HashMap<String, Integer>> activities = new ArrayList<>();
-        HashMap<String, Integer> highActivity = new HashMap<>();
-        HashMap<String, Integer> lowActivity = new HashMap<>();
+    // gets the top 4 and bottom 4 most common activities
+    public ArrayList<HashMap<String, Double>> findActivities(String startDate, String endDate) {
+        ArrayList<HashMap<String, Double>> activities = new ArrayList<>();
+        HashMap<String, Double> highActivity = new HashMap<>();
+        HashMap<String, Double> lowActivity = new HashMap<>();
 
-        sortByActivity();
+        HashMap<String, Double> activity = new HashMap<>();
+
+        for (Event e : eventsList) {
+            if (activity.containsKey(e.getActivity())) {
+                activity.put(e.getActivity(), activity.get(e.getActivity()) + e.getTaskTime());
+            } else {
+                activity.put(e.getActivity(), e.getTaskTime());
+            }
+        }
+
+        List<String> topKeys = getTopKeys(activity, 4);
+        List<String> bottomKeys = getBottomKeys(activity, 4);
+
+        for (int i = 0; i < topKeys.size(); i++) {
+            highActivity.put(topKeys.get(i), activity.get(topKeys.get(i)));
+        }
+
+        for (int i = 0; i < bottomKeys.size(); i++) {
+            lowActivity.put(bottomKeys.get(i), activity.get(bottomKeys.get(i)));
+        }
 
         sort();
+
+        activities.add(highActivity);
+        activities.add(lowActivity);
         return activities;
+    }
+
+    // Helper method for getting the top keys
+    public static List<String> getTopKeys(Map<String, Double> map, int n) {
+        // Handle case where the map has fewer than 'n' elements by limiting the result
+        // to map size
+        return map.entrySet()
+                .stream()
+                .sorted((entry1, entry2) -> Double.compare(entry2.getValue(), entry1.getValue())) // Sort by value
+                                                                                                  // descending
+                .limit(n) // Limit to top 'n' entries
+                .map(Map.Entry::getKey) // Extract the keys
+                .collect(Collectors.toList()); // Collect into a List
+    }
+
+    public static List<String> getBottomKeys(HashMap<String, Double> map, int n) {
+        // Sort the map by value in ascending order and get the bottom 'n' keys
+        return map.entrySet() // Convert map entries (key-value pairs) to a set
+                .stream() // Create a Stream from the set of entries
+                .sorted(Map.Entry.comparingByValue()) // Sort by value ascending
+                .limit(n) // Limit to the bottom 'n' entries
+                .map(Map.Entry::getKey) // Map the sorted entries to only the keys
+                .collect(Collectors.toList()); // Collect the keys into a List
     }
 
     public ArrayList<Event> read() {
