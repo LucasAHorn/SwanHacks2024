@@ -32,10 +32,9 @@ public class Event {
      * @return
      */
     public Boolean isInRange(String start, String end) {
-
+        if (StartTime.compareTo(start) <= 0 && EndTime.compareTo(end) >= 0) {
             return false;
-        }
-        else{
+        } else {
             return true;
         }
     }
