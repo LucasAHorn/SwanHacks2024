@@ -40,7 +40,7 @@ public class TimeTrackerController {
     private ArrayList<Event> eventsList = read();
 
     // This can be used for testing, will return to react
-    @GetMapping("/data")
+    @PostMapping("/data")
     public ResponseEntity<Object> tester() {
         Map<String, Object> data = new HashMap<>();
 
@@ -50,7 +50,7 @@ public class TimeTrackerController {
         return ResponseEntity.ok(data);
     }
 
-    @GetMapping("/EventsRange")
+    @PostMapping("/EventsRange")
     public ResponseEntity<HashMap<String, List<HashMap<String, String>>>> getActivities(
             @RequestParam("start") String startDate,
             @RequestParam("end") String endDate) {
@@ -90,14 +90,9 @@ public class TimeTrackerController {
 
     }
 
-    @GetMapping("/data/test")
-    public String displayString(@RequestParam String inputString) {
-        return "You entered: " + inputString;
-    }
-
-    @GetMapping("/addEvent")
+    @PostMapping("/addEvent")
     // Todo making this
-    public void addEvent(@RequestBody int ID, @RequestBody String Activity, @RequestBody String Color,
+    public ResponseEntity<Object> addEvent(@RequestBody int ID, @RequestBody String Activity, @RequestBody String Color,
             @RequestBody String Start, @RequestBody String End, @RequestBody String Date) {
         Event CurrentEvent = new Event(ID, Color, Activity, Start, End, Date);
 
@@ -107,12 +102,12 @@ public class TimeTrackerController {
         for (Event e : eventsList) {
             if (Start.compareTo(e.getStartTime()) <= 0 && Start.compareTo(e.getEndTime()) >= 0) {
                 shouldAdd = false;
-                break;
+                return new ResponseEntity<>("Time Overlapped", HttpStatus.NOT_FOUND);
             }
 
             if (End.compareTo(e.getStartTime()) >= 0 && Start.compareTo(e.getEndTime()) <= 0) {
                 shouldAdd = false;
-                break;
+                return new ResponseEntity<>("Time Overlapped", HttpStatus.NOT_FOUND);
             }
         }
 
@@ -122,11 +117,12 @@ public class TimeTrackerController {
 
         sort();
         write();
+        return ResponseEntity.ok("finished add");
     }
 
     // This is an example of how to get data
-    @GetMapping("/removeEvent")
-    public void removeEvent(@RequestBody HashMap<String, Integer> IdMap) {
+    @PostMapping("/removeEvent")
+    public ResponseEntity<Object> removeEvent(@RequestBody HashMap<String, Integer> IdMap) {
         for (Event e : eventsList) {
             if (e.getId() == IdMap.get("Id_Number")) {
                 eventsList.remove(e);
@@ -134,10 +130,11 @@ public class TimeTrackerController {
         }
 
         write();
+        return ResponseEntity.ok("finished remove");
     }
 
     @SuppressWarnings("unchecked")
-    public void write() {
+    public ResponseEntity<Object> write() {
         // Creating a JSONObject object
         JSONObject jsonObject = new JSONObject();
 
@@ -157,10 +154,11 @@ public class TimeTrackerController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return ResponseEntity.ok("Successfully wrote to file");
     }
 
     // gets the top 4 and bottom 4 most common activities
-    public ArrayList<HashMap<String, Double>> findActivities(String startDate, String endDate) {
+    public ResponseEntity<ArrayList<HashMap<String, Double>>> findActivities(String startDate, String endDate) {
         ArrayList<HashMap<String, Double>> activities = new ArrayList<>();
         HashMap<String, Double> highActivity = new HashMap<>();
         HashMap<String, Double> lowActivity = new HashMap<>();
@@ -190,7 +188,7 @@ public class TimeTrackerController {
 
         activities.add(highActivity);
         activities.add(lowActivity);
-        return activities;
+        return ResponseEntity.ok(activities);
     }
 
     // Helper method for getting the top keys
@@ -246,6 +244,7 @@ public class TimeTrackerController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return tempList;
     }
 

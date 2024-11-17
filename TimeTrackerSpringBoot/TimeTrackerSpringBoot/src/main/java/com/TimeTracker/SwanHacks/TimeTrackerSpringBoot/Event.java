@@ -104,7 +104,7 @@ public class Event {
     }
 
     public String createString() {
-        String eventString = "" + id + "" + Color + "" + Activity + "" + StartTime + "" + EndTime + "" + Date;
+        String eventString = "" + id + " " + Color + " " + Activity + " " + StartTime + " " + EndTime + " " + Date;
         return eventString;
     }
 }
