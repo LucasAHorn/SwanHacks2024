@@ -3,7 +3,7 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100%; /* Make sure the body fills the viewport */
-  overflow: hidden; /* Prevent scrollbars */
+  /* overflow: hidden; Prevent scrollbars */
 }
 
 /* Main container takes full height */
