@@ -26,6 +26,7 @@ html, body {
 /* Left and right sections */
 .side {
   flex: 1;
+  display: grid;
   /* padding: 1rem; */
   padding-bottom: 1rem;
   border: 1px solid #ccc;

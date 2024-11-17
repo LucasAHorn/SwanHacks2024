@@ -1,14 +1,21 @@
 import React, { useState } from "react";
 import styles from "./ActivityAddForm.module.css";
+import Event from "../Event"
 
-const ActivityForm: React.FC = () => {
+interface ActivityFormProps {
+    addEvent: (event: Event) => void;
+    currentMonday: Date;
+}
+
+const ActivityForm: React.FC<ActivityFormProps> = ({ addEvent }) => {
     const [title, setTitle] = useState("");
     const [startDate, setStartDate] = useState("");
-    const [endDate, setEndDate] = useState(""); // Added end date
+    const [numWeeks, setNumWeeks] = useState(0); // Added end date
     const [startTime, setStartTime] = useState("");
     const [endTime, setEndTime] = useState("");
     const [selectedColor, setSelectedColor] = useState("");
     const [selectedDays, setSelectedDays] = useState<string[]>([]);
+    const [index, setIndex] = useState(0);
 
     const colors = [
         "#FF5733", "#33FF57", "#3357FF", "#FF33A1", 
@@ -24,14 +31,89 @@ const ActivityForm: React.FC = () => {
         );
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const givenDayisSelectedDay = (date: Date) => {
+        for (let index = 0; index < selectedDays.length; index++) {
+            if (daysOfWeek[date.getDay()] == selectedDays[index]) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    const createID = () => {
+        return Math.floor(Math.random() * (4_000_000_000)) - 2_000_000_000;
+    }
+
+    const addEventToApp = async (Day: Date, StartTime: string, EndTime: string, ID_Number: number) => {
+        const activity = { 
+            "Activity": title, 
+            "Date": Day.getFullYear() + "-" + Day.getMonth() + "-" + Day.getDate(), 
+            "StartTime": StartTime, 
+            "EndTime": EndTime, 
+            "Color": selectedColor,
+            "ID_Number": ID_Number,
+        }
+
+        try {
+            const response = await fetch('http://localhost:8080/api/addEvent', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(activity), // Convert activity object to JSON
+            });
+    
+            if (!response.ok) {
+                throw new Error('Failed to send activity to the backend');
+            } else {
+                // TODO: create a new event and add it to the array
+                
+            }
+
+        } catch (error) {
+            console.error("Error posting activity:", error);
+        }
+    }
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const activity = { title, startDate, endDate, startTime, endTime, selectedColor, selectedDays };
-        console.log("Activity:", activity);
+        
+        
+        if (selectedDays.length < 1) {
+            alert("Select the Days of the week please");
+            return;
+        }
+        if (numWeeks > 10 && !confirm("Add event for more than 10 weeks?")) {
+            return;
+        }
+        if (selectedColor.length < 5) {
+            setSelectedColor(colors[index]);
+            setIndex((index + 1) % colors.length);
+        }
+        
+        var day = new Date(startDate);
+
+        for (let index = 0; index < numWeeks * 7; index++) {
+            
+            if (givenDayisSelectedDay(day)) {   
+                if (startTime < endTime) {  // 1 object
+                    addEventToApp(day, startTime, endTime, createID()); // TODO implement getting a random int
+                    day.setDate(day.getDate() + 1);
+                } else {                    // 2 objects
+                    var ID_Number = createID();
+                    addEventToApp(day, startTime, "23:59", ID_Number);
+                    day.setDate(day.getDate() + 1);
+                    addEventToApp(day, "00:00", endTime, ID_Number);
+                }
+            } else {
+                day.setDate(day.getDate() + 1);
+            }
+        }
+
         // Reset form
         setTitle("");
         setStartDate("");
-        setEndDate("");
+        setNumWeeks(0);
         setStartTime("");
         setEndTime("");
         setSelectedColor("");
@@ -42,7 +124,7 @@ const ActivityForm: React.FC = () => {
         // Reset form
         setTitle("");
         setStartDate("");
-        setEndDate("");
+        setNumWeeks(0);
         setStartTime("");
         setEndTime("");
         setSelectedColor("");
@@ -76,13 +158,13 @@ const ActivityForm: React.FC = () => {
             </div>
 
             <div>
-                <label className={styles.label} htmlFor="endDate">End Date</label>
+                <label className={styles.label} htmlFor="numWeeks">Number of Weeks</label>
                 <input
-                    type="date"
-                    id="endDate"
+                    type="number"
+                    id="numWeeks"
                     className={styles.input}
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
+                    value={numWeeks}
+                    onChange={(e) => setNumWeeks(Number(e.target.value))}
                     required
                 />
             </div>

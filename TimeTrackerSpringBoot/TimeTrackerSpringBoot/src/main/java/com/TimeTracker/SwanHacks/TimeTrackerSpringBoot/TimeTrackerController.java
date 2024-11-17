@@ -92,32 +92,13 @@ public class TimeTrackerController {
 
     @PostMapping("/addEvent")
     // Todo making this
-    public ResponseEntity<Object> addEvent(@RequestBody int ID, @RequestBody String Activity, @RequestBody String Color,
-            @RequestBody String Start, @RequestBody String End, @RequestBody String Date) {
-        Event CurrentEvent = new Event(ID, Color, Activity, Start, End, Date);
+    public ResponseEntity<Object> addEvent(@RequestBody Event Event) {
 
-        boolean shouldAdd = true;
-
-        // Todo check that the comparisons are right
-        for (Event e : eventsList) {
-            if (Start.compareTo(e.getStartTime()) <= 0 && Start.compareTo(e.getEndTime()) >= 0) {
-                shouldAdd = false;
-                return new ResponseEntity<>("Time Overlapped", HttpStatus.NOT_FOUND);
-            }
-
-            if (End.compareTo(e.getStartTime()) >= 0 && Start.compareTo(e.getEndTime()) <= 0) {
-                shouldAdd = false;
-                return new ResponseEntity<>("Time Overlapped", HttpStatus.NOT_FOUND);
-            }
-        }
-
-        if (shouldAdd) {
-            eventsList.add(CurrentEvent);
-        }
+        eventsList.add(Event);
 
         sort();
         write();
-        return ResponseEntity.ok("finished add");
+        return ResponseEntity.ok("");
     }
 
     // This is an example of how to get data

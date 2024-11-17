@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import styles from "./DataAnalysisWeek.module.css";
 
-const DataAnalysisWeek: React.FC = () => {
+interface DataAnalysisWeekProps {
+  currentMonday: Date;
+}
+
+const DataAnalysisWeek: React.FC<DataAnalysisWeekProps> = () => {
   // State to store the fetched data
   const [data, setData] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
