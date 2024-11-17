@@ -41,7 +41,8 @@ public class TimeTrackerController {
         return ResponseEntity.ok(data);
     }
 
-    public String uploadJsonFile(@RequestParam("file") MultipartFile file) {
+    @GetMapping("/test/upload")
+    public void uploadJsonFile(@RequestParam("file") MultipartFile file) {
         // Read the file content as JSON
         Event givenTime = new Event();
         JsonNode jsonNode = null;
@@ -56,15 +57,22 @@ public class TimeTrackerController {
         @SuppressWarnings("null")
         int Id = jsonNode.path("Id").asInt();
         String Activity = jsonNode.path("Activity").asText();
-        String Description = jsonNode.path("Description").asText();
         int color = jsonNode.path("age").asInt();
-        int IsSleep = jsonNode.path("IsSleep").asInt();
+        String date = jsonNode.path("date").asText();
+        String StartTime = jsonNode.path("StartTime").asText();
+        String EndTime = jsonNode.path("EndTime").asText();
 
-        String name = jsonNode.path("name").asText();
-        int age = jsonNode.path("age").asInt();
+        givenTime.setId(Id);
+        givenTime.setActivity(Activity);
+        givenTime.setColor(color);
+        givenTime.setDate(date);
+        givenTime.setStartTime(StartTime);
+        givenTime.setEndTime(EndTime);
 
-        // Return a success message with some details from the JSON
-        return String.format("Received JSON file with name: %s and age: %d", name, age);
+        timeChart.add(givenTime);
+
+        // ToDo: add to text file as well
+
     }
 
     // This can be used for testing, will return to react
@@ -87,7 +95,6 @@ public class TimeTrackerController {
         for (Event e : timeChart) {
             data.put("id", e.getId());
             data.put("color", e.getColor());
-            data.put("isSleep", e.getIsSleep());
             data.put("Activity", e.getActivity());
             data.put("date", e.getDate());
             data.put("StartTime", e.getStartTime());
