@@ -22,14 +22,22 @@ public class Event {
     }
 
     /**
-     * returns if this is within the specified range (inclusive, exclusive), you can change inputs as needed
+     * returns if this is within the specified range (inclusive, exclusive), you can
+     * 
+     * 
+     * change inputs as needed
+     * 
      * @param start
      * @param end
      * @return
      */
     public Boolean isInRange(String start, String end) {
-        // TODO: implement:
-        return false;
+
+            return false;
+        }
+        else{
+            return true;
+        }
     }
 
     public int getId() {
