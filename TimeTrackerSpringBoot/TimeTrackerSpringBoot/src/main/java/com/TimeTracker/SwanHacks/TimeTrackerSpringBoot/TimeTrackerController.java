@@ -1,53 +1,38 @@
 package com.TimeTracker.SwanHacks.TimeTrackerSpringBoot;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.json.simple.JSONObject;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Configuration
 @RestController
 @RequestMapping("/api")
 public class TimeTrackerController {
 
-    // call function that makes the arraylist
+    private ArrayList<Event> eventsList;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
-    private ArrayList<Event> eventsList = read();
-
-    // This can be used for testing, will return to react
-    @PostMapping("/data")
-    public ResponseEntity<Object> tester() {
-        Map<String, Object> data = new HashMap<>();
-
-        data.put("Activtiy", "lalala");
-
-        data.put("message", "Hello from Spring Boot!");
-        return ResponseEntity.ok(data);
+    public TimeTrackerController() {
+        try {
+            eventsList = read();    // TODO, make sure this does not screw up the entire program
+        } catch (Exception e) {
+            eventsList = new ArrayList<>(); // Fallback
+            e.printStackTrace();
+        }
     }
 
     @PostMapping("/EventsRange")
@@ -56,7 +41,7 @@ public class TimeTrackerController {
             @RequestParam("end") String endDate) {
 
         HashMap<String, List<HashMap<String, String>>> returnedHashMap = new HashMap<>();
-        ArrayList<HashMap<String, String>> arr = new ArrayList();
+        ArrayList<HashMap<String, String>> arr = new ArrayList<>();
         HashMap<String, String> EventDescription;
         for (Event e : eventsList) {
             if (e.isInRange(startDate, endDate)) { // TODO: implement the function
@@ -91,7 +76,6 @@ public class TimeTrackerController {
     }
 
     @PostMapping("/addEvent")
-    // Todo making this
     public ResponseEntity<Object> addEvent(@RequestBody Event Event) {
 
         eventsList.add(Event);
@@ -103,21 +87,16 @@ public class TimeTrackerController {
 
     // This is an example of how to get data
     @PostMapping("/removeEvent")
-    public ResponseEntity<Object> removeEvent(@RequestBody HashMap<String, Integer> IdMap) {
-        for (Event e : eventsList) {
-            if (e.getId() == IdMap.get("Id_Number")) {
-                eventsList.remove(e);
-            }
-        }
+    public ResponseEntity<Object> removeEvent(@RequestBody Integer ID_num) {
+        eventsList.removeIf(e -> e.getId() == ID_num);
 
         write();
-        return ResponseEntity.ok("finished remove");
+        return ResponseEntity.ok("success");
     }
 
-    @SuppressWarnings("unchecked")
     public ResponseEntity<Object> write() {
         // Creating a JSONObject object
-        JSONObject jsonObject = new JSONObject();
+        // JSONObject jsonObject = new JSONObject();
 
         File checkfile = new File("./userData.json");
         if (checkfile.exists()) {
@@ -139,16 +118,17 @@ public class TimeTrackerController {
     }
 
     // gets the top 4 and bottom 4 most common activities
-    public ResponseEntity<ArrayList<HashMap<String, Double>>> findActivities(String startDate, String endDate) {
-        ArrayList<HashMap<String, Double>> activities = new ArrayList<>();
+    @GetMapping("/analysis")
+    public ResponseEntity<HashMap<String, HashMap<String, Double>>> findActivities(String startDate, String endDate) {
         HashMap<String, Double> highActivity = new HashMap<>();
         HashMap<String, Double> lowActivity = new HashMap<>();
-
+        HashMap<String, HashMap<String, Double>> KeyActivities = new HashMap<>();
+        
         HashMap<String, Double> activity = new HashMap<>();
 
         for (Event e : eventsList) {
             if (activity.containsKey(e.getActivity())) {
-                activity.put(e.getActivity(), activity.get(e.getActivity()) + e.getTaskTime());
+                activity.replace(e.getActivity(), activity.get(e.getActivity()) + e.getTaskTime());
             } else {
                 activity.put(e.getActivity(), e.getTaskTime());
             }
@@ -157,19 +137,31 @@ public class TimeTrackerController {
         List<String> topKeys = getTopKeys(activity, 4);
         List<String> bottomKeys = getBottomKeys(activity, 4);
 
+        //TODO: also return the amount of hours
         for (int i = 0; i < topKeys.size(); i++) {
             highActivity.put(topKeys.get(i), activity.get(topKeys.get(i)));
         }
 
+        // TODO: also return amount of hours
         for (int i = 0; i < bottomKeys.size(); i++) {
             lowActivity.put(bottomKeys.get(i), activity.get(bottomKeys.get(i)));
         }
 
-        sort();
+        // TODO: find activities that have occoured the most
+        // TODO: find the number of times the event has occoured
 
-        activities.add(highActivity);
-        activities.add(lowActivity);
-        return ResponseEntity.ok(activities);
+
+        // returns:
+            // HighestCount.numEvents
+            // HighestCount.Descriptions
+            // UncommonEvents.Hours
+            // UncommonEvents.Descriptions
+            // CommonEvents.Hours
+            // CommonEvents.Descriptions
+
+        KeyActivities.put("CommonEvents", highActivity);
+        KeyActivities.put("UncommonEvents", lowActivity);
+        return ResponseEntity.ok(KeyActivities);
     }
 
     // Helper method for getting the top keys
@@ -212,7 +204,8 @@ public class TimeTrackerController {
             System.out.println(jsonData.getNodeType());
 
             for (int i = 0; i < jsonData.size(); i++) {
-                int id = jsonData.get(i).get("id").asInt();
+                int id = jsonData.get(i).get("id").asInt();   // FIXME: at com.TimeTracker.SwanHacks.TimeTrackerSpringBoot.TimeTrackerController.read(TimeTrackerController.java:212)
+                                                                        // FIXME: return value of "com.fasterxml.jackson.databind.JsonNode.get(String)" is null
                 String color = jsonData.get(i).get("color").asText();
                 String activity = jsonData.get(i).get("activity").asText();
                 String startTime = jsonData.get(i).get("startTime").asText();

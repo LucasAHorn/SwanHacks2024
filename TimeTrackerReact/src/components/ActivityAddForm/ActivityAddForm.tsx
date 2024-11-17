@@ -56,7 +56,7 @@ const ActivityForm: React.FC<ActivityFormProps> = ({ addEvent }) => {
 
         try {
             const response = await fetch('http://localhost:8080/api/addEvent', {
-                method: 'POST',
+                method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                 },

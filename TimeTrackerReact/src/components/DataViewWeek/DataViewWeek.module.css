@@ -21,18 +21,18 @@
     border-right: none;
 }
 
-
 .weekEventContainer {
     display: flex;          /* Enable Flexbox */
     width: 100%;            /* Ensure the container spans the full width of its parent */
+    height: 50vh;           /* Set the container height to 70% of the viewport height */
 }
 
 .weekEventContainer > * {
     flex: 1;                /* Make each child element occupy an equal portion of the width */
-    border-right: 1px solid #ccc; /* Optional: Add borders for better visualization */
-    text-align: center;     /* Optional: Center text inside each column */
+    border-right: 1px solid #ccc; /* Add borders between child elements */
+    text-align: center;     /* Center text inside each column */
 }
 
-.weekEventContainer:last-child {
-    border-right: none;
+.weekEventContainer > *:last-child {
+    border-right: none;     /* Remove the right border of the last child */
 }

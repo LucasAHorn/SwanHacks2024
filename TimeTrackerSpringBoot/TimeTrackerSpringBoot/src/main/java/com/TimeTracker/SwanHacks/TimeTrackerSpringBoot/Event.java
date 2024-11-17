@@ -103,7 +103,8 @@ public class Event {
         return Date;
     }
 
-    public String createString() {
+    @Override
+    public String toString() {
         String eventString = "" + id + " " + Color + " " + Activity + " " + StartTime + " " + EndTime + " " + Date;
         return eventString;
     }
