@@ -81,28 +81,7 @@ public class TimeTrackerController {
             Event val = eventsList.get(i);
             int j = i - 1;
 
-            /*
-             * Move elements of arr[0..i-1], that are
-             * greater than key, to one position ahead
-             * of their current position
-             */
-            // Check to see if this sort works
             while (j >= 0 && eventsList.get(j).getDate().compareTo(val.getDate()) < 0) {
-                eventsList.set(j + 1, eventsList.get(j));
-                j = j - 1;
-            }
-            eventsList.set(j + 1, val);
-        }
-
-    }
-
-    public void sortByActivity() {
-
-        for (int i = 1; i < eventsList.size(); ++i) {
-            Event val = eventsList.get(i);
-            int j = i - 1;
-
-            while (j >= 0 && eventsList.get(j).getTaskTime() > val.getTaskTime()) {
                 eventsList.set(j + 1, eventsList.get(j));
                 j = j - 1;
             }
@@ -155,7 +134,6 @@ public class TimeTrackerController {
         }
 
         write();
-        // TODO: make a new file (def just to keep history)
     }
 
     @SuppressWarnings("unchecked")
