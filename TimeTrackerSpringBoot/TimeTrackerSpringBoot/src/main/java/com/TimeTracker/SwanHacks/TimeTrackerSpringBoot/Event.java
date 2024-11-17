@@ -4,22 +4,14 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
- public class Event {
-
-
-
-
-
-
-    
-
+public class Event {
 
     @JsonProperty("ID_Number")
     private int id;
 
     @JsonProperty("Color")
     private String Color;
-    
+
     @JsonProperty("Activity")
     private String Activity;
 
@@ -28,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
     @JsonProperty("StartTime")
     private String StartTime;
-    
+
     @JsonProperty("EndTime")
     private String EndTime;
 
@@ -109,5 +101,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
     public String getDate() {
         return Date;
+    }
+
+    public String createString() {
+        String eventString = "" + id + "" + Color + "" + Activity + "" + StartTime + "" + EndTime + "" + Date;
+        return eventString;
     }
 }
