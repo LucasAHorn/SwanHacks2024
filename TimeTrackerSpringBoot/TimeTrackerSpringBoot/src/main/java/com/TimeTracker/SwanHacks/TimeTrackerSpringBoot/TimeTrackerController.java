@@ -1,6 +1,7 @@
 package com.TimeTracker.SwanHacks.TimeTrackerSpringBoot;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
@@ -35,7 +36,7 @@ public class TimeTrackerController {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private ArrayList<Event> eventsList = JsonReader();
+    private ArrayList<Event> eventsList = read();
 
     // This can be used for testing, will return to react
     @GetMapping("/data")
@@ -60,7 +61,7 @@ public class TimeTrackerController {
             if (e.isInRange(startDate, endDate)) { // TODO: implement the function
                 EventDescription = new HashMap<>();
                 EventDescription.put("ID", "" + e.getId());
-                EventDescription.put("Color", "" + e.getColor());
+                EventDescription.put("Color", e.getColor());
                 EventDescription.put("Activity", e.getActivity());
                 EventDescription.put("EndTime", e.getEndTime());
                 EventDescription.put("StartTime", e.getEndTime());
@@ -74,7 +75,6 @@ public class TimeTrackerController {
     }
 
     public void sort() {
-        ArrayList<Event> sortedList = new ArrayList<Event>();
 
         for (int i = 1; i < eventsList.size(); ++i) {
             Event val = eventsList.get(i);
@@ -102,7 +102,7 @@ public class TimeTrackerController {
 
     @GetMapping("/add")
     // Todo making this
-    public void addEvent(@RequestBody int ID, @RequestBody String Activity, @RequestBody int Color,
+    public void addEvent(@RequestBody int ID, @RequestBody String Activity, @RequestBody String Color,
             @RequestBody String Start, @RequestBody String End, @RequestBody String Date) {
         Event CurrentEvent = new Event(ID, Color, Activity, Start, End, Date);
 
@@ -153,35 +153,50 @@ public class TimeTrackerController {
         }
 
         // Inserting key-value pairs into the json object
-        for (int i = 0; i < eventsList.size(); i++) {
+        ObjectMapper objectMapper = new ObjectMapper();
 
-            jsonObject.put("ID", eventsList.get(i).getId());
-            jsonObject.put("Activity", eventsList.get(i).getActivity());
-            jsonObject.put("Color", eventsList.get(i).getColor());
-            jsonObject.put("Start", eventsList.get(i).getStartTime());
-            jsonObject.put("End", eventsList.get(i).getEndTime());
-            jsonObject.put("Date", eventsList.get(i).getDate());
+        try {
+            // Write the list of events to a JSON file
+            objectMapper.writeValue(new File("./userData.json"), eventsList);
+            System.out.println("Data has been written to events.json");
 
-            try {
-                FileWriter file = new FileWriter("./userData.json");
-                file.write(jsonObject.toJSONString() + "\n");
-                file.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            System.out.println("JSON file created: " + jsonObject);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    public ArrayList<Event> JsonReader() {
-        ArrayList<Event> temp = new ArrayList<Event>();
-        File file = new File("serData.json");
+    public ArrayList<Event> read() {
+        ArrayList<Event> tempList = new ArrayList<Event>();
+        Event tempEvent = new Event();
+        File file = new File("userData.json");
 
         if (!file.exists()) {
-            return temp;
+            return tempList;
         }
 
-        return null;
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            JsonNode jsonData = mapper.readTree(new File("userData.json"));
+            System.out.println(jsonData);
+            System.out.println(jsonData.getNodeType());
+
+            for (int i = 0; i < jsonData.size(); i++) {
+                int id = jsonData.get(i).get("id").asInt();
+                String color = jsonData.get(i).get("color").asText();
+                String activity = jsonData.get(i).get("activity").asText();
+                String startTime = jsonData.get(i).get("startTime").asText();
+                String endTime = jsonData.get(i).get("endTime").asText();
+                String date = jsonData.get(i).get("date").asText();
+
+                tempEvent = new Event(id, color, activity, startTime, endTime, date);
+                tempList.add(tempEvent);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return tempList;
     }
 
 }
